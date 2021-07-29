@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'w*uso4tbx%wdkql3_6+exei*4t=@-lw6ecy30(y!cvh@wep7kr'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -38,8 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'knox',
-    'quickstart.apps.QuickstartConfig',
+    'endpoints.apps.EndpointsConfig',
     'corsheaders',
     
 
@@ -49,9 +51,8 @@ REST_FRAMEWORK = {
      'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
      'PAGE_SIZE':100,
      'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        'knox.auth.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
 }
 
@@ -68,7 +69,7 @@ MIDDLEWARE = [
 
 ]
 
-ROOT_URLCONF = 'example.urls'
+ROOT_URLCONF = 'flickr_app.urls'
 
 TEMPLATES = [
     {
@@ -86,7 +87,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'example.wsgi.application'
+WSGI_APPLICATION = 'flickr_app.wsgi.application'
 
 
 # Database
@@ -95,11 +96,11 @@ WSGI_APPLICATION = 'example.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'flickr_app',
-        'USER': 'admin',
-        'PASSWORD': 'Mindfire#12',
-        'HOST': 'localhost',
-        'PORT' : '3306',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'), 
+        'PORT' : os.getenv('DB_PORT'),
     }
 }
 
@@ -149,19 +150,26 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000"
 ]
 
-LOGGIGNG = {
-    'version':1,
-    'loggers' : {
-        'django':{
-            'handlers':['file'],
-            'level':'DEBUG'
-        }
-    },
-    'handlers' :{
+LOGGING ={
+    'version': 1,
+    'handlers':{
         'file': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': './logs/debug.log'
-        }
+            'filename': './logs/debug.log',
+        },
     },
+    'loggers':{
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+        },
+        'quickstart': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+    
+    # 'formatters':{}
 }
