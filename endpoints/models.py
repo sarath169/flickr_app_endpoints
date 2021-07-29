@@ -23,8 +23,8 @@ class Note(models.Model):
     text = models.TextField()
     image_id = models.ForeignKey(FavouriteImage, on_delete=models.CASCADE)
 
+    def filter_by_id(self,id):
+        return Note.objects.filter(id = id)
+
     class Meta:
         db_table = "Notes"
-
-
-

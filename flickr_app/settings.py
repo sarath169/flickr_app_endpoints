@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'endpoints.apps.EndpointsConfig',
     'corsheaders',
     
@@ -51,9 +52,11 @@ REST_FRAMEWORK = {
      'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
      'PAGE_SIZE':100,
      'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ],
 }
 
 MIDDLEWARE = [
@@ -173,3 +176,7 @@ LOGGING ={
     
     # 'formatters':{}
 }
+
+# 3rd party apis
+
+FLICKR_API = "https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key="+os.getenv('FLICKR_API_KEY')+"&text="
