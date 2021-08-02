@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.db import models
 from django.db.models import fields
 from rest_framework import serializers
 
@@ -8,17 +7,17 @@ from .models import FavouriteImage, Location, Note
 class PopulateLocationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ('location_name','id')
+        fields = ('location_name','id', 'user')
     
 class AddNewLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ('latitude', 'longitude', 'location_name')
+        fields = ('latitude', 'longitude', 'location_name', 'user')
 
 class AddFavouriteImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = FavouriteImage
-        fields = ('id','secret', 'farm', 'server','title')
+        fields = ('user','id','secret', 'farm', 'server','title')
 
 class SearchLocationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,12 +27,12 @@ class SearchLocationSerializer(serializers.ModelSerializer):
 class AddNoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields = ('image_id', 'text')
+        fields = ('user','image', 'text')
     
 class ListFavouritesId(serializers.ModelSerializer):
     class Meta:
         model = FavouriteImage
-        fields = ('id',)
+        fields = ('id','user')
 
 class RegisterSerializer(serializers.ModelSerializer):
 
@@ -60,10 +59,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-class LoginSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("username", "password")
-        extra_kwargs = {
-            'password' : {'write_only' : True}
-        }
+        fields = ('username', 'id')
